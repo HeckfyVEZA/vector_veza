@@ -69,7 +69,7 @@ def fulfil_temp(cblank,type_scheme): # Сама функция вывода вс
             path = '6-Ш.jpg'
 
     #st.write(path)
-    path ='\\Scheme\\' + path
+    path ='Scheme\\' + path
     #path = f"./{path}"
    
 
