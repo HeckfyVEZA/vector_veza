@@ -112,14 +112,13 @@ def TIH(G:float): # Определяем типоразмер для схемы 
         case G if 10000 <= G < 14000:
             return "8"
 
-def table_costs(BZs, Vectors, Rezervs,Glycol_found): #здесь формируются цены
+def table_costs(BZs, Vectors, Rezervs,Glycol_found,short_blank,blocks): #здесь формируются цены
     #costs = [vector_cost(Vectors[i]) if  Rezervs[i] else 0 for i in range(len(Vectors))] #Для резерва цену пока не знаем, поэтому ноль
     costs = [vector_cost(Vectors[i]) for i in range(len(Vectors))]
     costs = [costs[i]*1.8 if Glycol_found[i] != 0 else costs[i] for i in range(len(costs))] #Для глюколя повышаем цену на 80%
     costs = [costs[i]*1.3 if Rezervs[i] else costs[i] for i in range(len(costs))] #Для резерва повышаем цену на 30%
-    df = {"Бланк-Заказ":BZs,"Вектор": Vectors, "Стоимость в рублях с НДС": costs}
+    df = {"Бланк-Заказ":BZs,"Бланк": short_blank,"Блок": blocks,"Вектор": Vectors, "Стоимость в рублях с НДС": costs}
     df = pd.DataFrame(df)
-    #pd.DataFrame(df).to_excel(f"C:\\Users\\kushhov\\Desktop\\vector-main\\ВЕКТОР цены.xlsx", index=False)    
     return df
 
 def file_read(file): # Поиск информации в бланке ВЕРОСА
