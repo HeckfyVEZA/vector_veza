@@ -58,7 +58,7 @@ def many_bl(blank,vals,name_file,BZ,key_cost,cvector_list,vector_podbor,rezerve_
 
     #df.to_excel(f"C:\\Users\\kushhov\\Desktop\\vector-main\\ВЕКТОР ВЕРОСА.xlsx", index=False)
   
-    df_cost = table_costs(BZs, key_cost, rezervs,Glycol_found) # Для формирования Таблиц-цен нужно: Номер БЗ, Вектор,Резерв,Путь,
+    df_cost = table_costs(BZs, key_cost, rezervs,Glycol_found,short_blank,blocks) # Для формирования Таблиц-цен нужно: Номер БЗ, Вектор,Резерв,Путь,
     return df, df_cost
 
 def scheme_recognition(valve, G): # Функция, выбирающая то, какую функцию мы будем использовать для определения полного названия ВЕКТОРа
@@ -119,6 +119,7 @@ def table_costs(BZs, Vectors, Rezervs,Glycol_found,short_blank,blocks): #зде�
     costs = [costs[i]*1.3 if Rezervs[i] else costs[i] for i in range(len(costs))] #Для резерва повышаем цену на 30%
     df = {"Бланк-Заказ":BZs,"Бланк": short_blank,"Блок": blocks,"Вектор": Vectors, "Стоимость в рублях с НДС": costs}
     df = pd.DataFrame(df)
+    #pd.DataFrame(df).to_excel(f"C:\\Users\\kushhov\\Desktop\\vector-main\\ВЕКТОР цены.xlsx", index=False)    
     return df
 
 def file_read(file): # Поиск информации в бланке ВЕРОСА
