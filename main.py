@@ -14,6 +14,8 @@ import pandas as pd
 st.set_page_config(layout="wide") 
 st.session_state['developer'] = st.text_input('Введите имя разработчика') #Вводим имя инженера
 main_tab = st.tabs(['Автоматический режим', 'Полуавтоматический режим', 'Ручной режим']) #Возможность выбрать режим
+st.session_state['blank_name'] = []
+
 
 def automate_foo(ind,vector_podbor = bool):
     """ Общая основная функция для автоматического и полуавтоматического режима\n
@@ -31,6 +33,8 @@ def automate_foo(ind,vector_podbor = bool):
     all_df_verosa = {}
     all_df_verosa = pd.DataFrame(all_df_verosa)
     for file in f: #Проходимся по каждому файлу
+        #st.session_state['blank_name'].append(file.name) Попытка вывести все наименования загружаемых бланков
+        #st.session_state['blank_name']
         j +=1
         #st.write(info(file).all_data) #Выводит один большой вложенный список
         name_file = file.name
@@ -49,7 +53,7 @@ def automate_foo(ind,vector_podbor = bool):
 
             if vector_podbor:
                 col = st.columns(2) # Делим на два столбца
-                vector_scheme, vector_valve, vector_side,rezerve = vector_form_foo(ind,col)
+                vector_scheme, vector_valve, vector_side,rezerve = vector_form_foo(ind,col,vector_scheme)
                 cvector,vector_scheme, vector_valve, type_size = selection(vector_scheme, vector_valve, cblank["consumption"], vector_side)
                 type_scheme =[vector_scheme,vector_valve,type_size]
                 cblank["vector"] = cvector
@@ -71,7 +75,7 @@ def automate_foo(ind,vector_podbor = bool):
             cvector_list.append(cvector)
             if vector_podbor:
                 rezerve_list.append(rezerve)
-            name = f"{cvector}.docx"
+            name = f"{cblank['order form']}-{cblank['system']}-{cvector}.docx"
             with ZipFile(Archive, mode='a') as archive:
                 archive.writestr(name, bio.getvalue())
 
@@ -108,13 +112,36 @@ def automate_foo(ind,vector_podbor = bool):
 
             st.download_button('💾Загрузить Архив: ', data=Archive.getvalue(), file_name=name_archive,key=ind+6) # Для каждого файла свой архив (относится к внешнему циклу)
 
-def vector_form_foo(ind,col):
+def vector_form_foo(ind,col,vector_scheme):
     col[0].write(f'Узелрегулирующий ВЕКТОР:')
     col[1].write(' ')
     col[1].write(' ')
     col[1].write(' ')
    
-    vector_scheme = col[0].selectbox( 'Схема', ('1', '2', '3','4','4М','5','5М','6','6М'),key=ind+111)
+
+    origin = 0
+    match vector_scheme:
+        case "1":
+            origin = 0
+        case "2":
+            origin = 1
+        case "3": 
+            origin = 2
+        case "4":
+            origin = 3
+        case "4М":
+            origin = 4
+        case "5":
+            origin = 5
+        case "5М":
+            origin = 6
+        case "6":
+            origin = 7
+        case "6М":
+            origin = 8
+
+
+    vector_scheme = col[0].selectbox( 'Схема', ('1', '2', '3','4','4М','5','5М','6','6М'),key=ind+111,index=origin)
     if vector_scheme in ('1','3','4М'):
         vector_valve = 'С'
         col[0].write('Клапан: С')
@@ -129,7 +156,7 @@ def vector_form_foo(ind,col):
         rezerve = 1
     else:
         rezerve = 0
-    vector_side = col[1].selectbox( 'Сторона подключения', ('Л', 'П'),key=ind+333)
+    vector_side = col[1].selectbox( 'Сторона подключения', ('Л', 'П'),key=ind+333,index=1)
     return vector_scheme, vector_valve, vector_side, rezerve
 
 with main_tab[0]: # Для автоматического режима 
@@ -167,7 +194,7 @@ with  main_tab[2]: # Для ручного режима
     #Формирование вектора
 
     
-    vector_scheme, vector_valve, vector_side,rezerve = vector_form_foo(10,col)
+    vector_scheme, vector_valve, vector_side,rezerve = vector_form_foo(10,col,1)
     cvector,vector_scheme, vector_valve, type_size = selection(vector_scheme, vector_valve, cblank["consumption"], vector_side)
     st.write(f'{cvector}')
 
@@ -212,14 +239,16 @@ with  main_tab[2]: # Для ручного режима
     BZ = [cblank["order form"]]
     rezerve = [str(cblank["reserve"])]
     glycol = [cblank["glycol"]]
-    df_cost = table_costs(BZ, key_cost, rezerve,glycol)
+    blank = [cblank["orderer"]]
+    block = ['-']
+    df_cost = table_costs(BZ, key_cost, rezerve,glycol,blank,block)
     output = io.BytesIO()
     writer = pd.ExcelWriter(output, engine='xlsxwriter')
     df_cost.to_excel(output, index=False)
     name = 'ВЕКТОР ЦЕНЫ.xlsx' 
     with ZipFile(Archive, mode='a') as archive:
         archive.writestr(name,output.getvalue())
-    name_archive = cblank['orderer']+'.zip'
+    name_archive = cblank['order form']+'.zip'
     st.download_button('💾Загрузить Архив: ', data=Archive.getvalue(), file_name=name_archive) # Для каждого файла свой архив (относится к внешнему циклу)
 
 with  main_tab[1]: #Полуавтоматический режим: ВЕКТОК-схема-клапан-сторона и резерв
