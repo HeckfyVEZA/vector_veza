@@ -108,7 +108,7 @@ class info():
                     for item in decomposed_docx:
                         if "Индекс: Канал-КВН" in item or "Индекс: Канал-ВКО" in item:
                             var.append('')
-                            sidee = "СПРАВА"
+                            sidee = "П"
                             heat_exchanger = item.split()[1].split(";")[0]
                             heat_exchanger = "ВНВ" if "КВН" in heat_exchanger else "ВОВ"
                             temperature = float(findall(r"tжн= {0,1}([\-\.,\d]*) {0,1}°C", item)[0].replace(",", "."))
