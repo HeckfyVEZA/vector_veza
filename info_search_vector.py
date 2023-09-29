@@ -60,10 +60,10 @@ class info():
             file (_type_): file.docx
         """
         try:
-            composed_docx = [x for x in process(file).split("\n") if len(x)]
-            decomposed_docx = [[composed_docx[composed_docx.index(item)-1], item] for item in composed_docx if ("ВНВ" in item or "ВОВ" in item or "название:"in item)]
-            decomposed_docx = [[item[1], True] if 'Теплоутилизатор'.lower() in item[0].lower() else [item[1], False] for item in decomposed_docx if not 'Теплоутилизатор-охладитель'.lower() in item[0].lower()]
             try:
+                composed_docx = [x for x in process(file).split("\n") if len(x)]
+                decomposed_docx = [[composed_docx[composed_docx.index(item)-1], item] for item in composed_docx if ("ВНВ" in item or "ВОВ" in item or "название:"in item)]
+                decomposed_docx = [[item[1], True] if 'Теплоутилизатор'.lower() in item[0].lower() else [item[1], False] for item in decomposed_docx if not 'Теплоутилизатор-охладитель'.lower() in item[0].lower()]
                 orderer, object_, manager = [y for y in composed_docx if "организация: " in y or "менеджер:" in y or "объект: " in y]
                 orderer = orderer.replace("организация: ", "")
                 object_ = object_.replace("объект: ","")
