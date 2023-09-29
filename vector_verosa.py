@@ -52,8 +52,10 @@ def many_bl(blank,vals,name_file,BZ,key_cost,cvector_list,vector_podbor,rezerve_
                     "Номер БЗ": BZs,
                     "Резерв": rezervs}
 
-
-    way = names_of[0].replace(names_of[0].split("/")[-1], "")
+    try:
+        way = names_of[0].replace(names_of[0].split("/")[-1], "")
+    except:
+        way = " "
     df = pd.DataFrame(allsis)  
 
     #df.to_excel(f"C:\\Users\\kushhov\\Desktop\\vector-main\\ВЕКТОР ВЕРОСА.xlsx", index=False)
