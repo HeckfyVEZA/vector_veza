@@ -97,7 +97,7 @@ class info():
                         pass
             except:
                 try:
-                    decomposed_docx = [item for item in process(folder+file2).split("\n") if len(item)]
+                    decomposed_docx = [item for item in process(file).split("\n") if len(item)]
 # print(infos)
                     orderer = decomposed_docx[decomposed_docx.index('Заказчик:')+1]
                     object_ = decomposed_docx[decomposed_docx.index('Объект:')+1]
