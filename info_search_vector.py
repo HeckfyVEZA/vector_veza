@@ -63,35 +63,60 @@ class info():
             composed_docx = [x for x in process(file).split("\n") if len(x)]
             decomposed_docx = [[composed_docx[composed_docx.index(item)-1], item] for item in composed_docx if ("ВНВ" in item or "ВОВ" in item or "название:"in item)]
             decomposed_docx = [[item[1], True] if 'Теплоутилизатор'.lower() in item[0].lower() else [item[1], False] for item in decomposed_docx if not 'Теплоутилизатор-охладитель'.lower() in item[0].lower()]
-            orderer, object_, manager = [y for y in composed_docx if "организация: " in y or "менеджер:" in y or "объект: " in y]
-            orderer = orderer.replace("организация: ", "")
-            object_ = object_.replace("объект: ","")
-            manager = manager.replace("менеджер: ", "")
-            all_data = []
-            var = []
-            # st.write(decomposed_docx)
-            name = decomposed_docx[0][0][10:]
-            system = decomposed_docx[1][0][10:]
-            # st.write(decomposed_docx[1])
-            for item in decomposed_docx[2:]:
-                try:
-                    var.append(item[0])
-                    
-                    sidee = findall(r"сторона: ([слевапр]*)", item[0])[0][1].upper()
-                    heat_exchanger = findall(r"теплообменник; назв: ([ВНО\.\d\-]*)", item[0])[0]
-                    temperature = float(findall(r"tжн=([\-\.\d]*)°C;", item[0])[0])
-                    G = float(findall(r"[GV]ж=([\d\.]*)кг/ч", item[0])[0])/1000
+            try:
+                orderer, object_, manager = [y for y in composed_docx if "организация: " in y or "менеджер:" in y or "объект: " in y]
+                orderer = orderer.replace("организация: ", "")
+                object_ = object_.replace("объект: ","")
+                manager = manager.replace("менеджер: ", "")
+                all_data = []
+                var = []
+                # st.write(decomposed_docx)
+                name = decomposed_docx[0][0][10:]
+                system = decomposed_docx[1][0][10:]
+                # st.write(decomposed_docx[1])
+                for item in decomposed_docx[2:]:
                     try:
-                        glycol = float(findall(r"иленгл: ([\d\.]*)%;", item[0])[0])
-                        glykol_type = findall(r"([этпро]*иленгл)", item[0])[0]+'иколь'
-                        realG = G/search_glic_ro(temperature, glycol/100)
+                        var.append(item[0])
+                        
+                        sidee = findall(r"сторона: ([слевапр]*)", item[0])[0][1].upper()
+                        heat_exchanger = findall(r"теплообменник; назв: ([ВНО\.\d\-]*)", item[0])[0]
+                        temperature = float(findall(r"tжн=([\-\.\d]*)°C;", item[0])[0])
+                        G = float(findall(r"[GV]ж=([\d\.]*)кг/ч", item[0])[0])/1000
+                        try:
+                            glycol = float(findall(r"иленгл: ([\d\.]*)%;", item[0])[0])
+                            glykol_type = findall(r"([этпро]*иленгл)", item[0])[0]+'иколь'
+                            realG = G/search_glic_ro(temperature, glycol/100)
+                        except:
+                            glycol = 0
+                            glykol_type = ''
+                            realG = G/search_glic_ro(temperature, glycol/100)
+                        realG = round(realG, 3)
+                        hu = item[1]
+                        all_data.append([('теплообменник', heat_exchanger), ("температура",temperature), ("расход", realG), ("содержание гликоля", glycol), ("заказчик", orderer), ("объект", object_), ("менеджер", manager), ("название", name), ("система", system), ("сторона обслуживания", sidee),  ("теплоутилизатор", hu), ("тип гликоля", glykol_type)])
                     except:
-                        glycol = 0
-                        glykol_type = ''
-                        realG = G/search_glic_ro(temperature, glycol/100)
-                    realG = round(realG, 3)
-                    hu = item[1]
-                    all_data.append([('теплообменник', heat_exchanger), ("температура",temperature), ("расход", realG), ("содержание гликоля", glycol), ("заказчик", orderer), ("объект", object_), ("менеджер", manager), ("название", name), ("система", system), ("сторона обслуживания", sidee),  ("теплоутилизатор", hu), ("тип гликоля", glykol_type)])
+                        pass
+            except:
+                try:
+                    decomposed_docx = [item for item in process(folder+file2).split("\n") if len(item)]
+# print(infos)
+                    orderer = decomposed_docx[decomposed_docx.index('Заказчик:')+1]
+                    object_ = decomposed_docx[decomposed_docx.index('Объект:')+1]
+                    manager = " "
+                    all_data = []
+                    var = []
+                    name = system = decomposed_docx[decomposed_docx.index('Название:')+1]
+                    for item in decomposed_docx:
+                        if "Индекс: Канал-КВН" in item or "Индекс: Канал-ВКО" in item:
+                            var.append('')
+                            sidee = "СПРАВА"
+                            heat_exchanger = item.split()[1].split(";")[0]
+                            temperature = float(findall(r"tжн= {0,1}([\-\.,\d]*) {0,1}°C", item)[0].replace(",", "."))
+                            G = float(findall(r"Gж=([\-\.,\d]*) кг/ч", item)[0].replace(",", "."))/1000
+                            glycol = 0
+                            glykol_type = ''
+                            realG = G/search_glic_ro(temperature, glycol/100)
+                            hu = ''
+                            all_data.append([('теплообменник', heat_exchanger), ("температура",temperature), ("расход", realG), ("содержание гликоля", glycol), ("заказчик", orderer), ("объект", object_), ("менеджер", manager), ("название", name), ("система", system), ("сторона обслуживания", sidee),  ("теплоутилизатор", hu), ("тип гликоля", glykol_type)])
                 except:
                     pass
             self.all_data = all_data
