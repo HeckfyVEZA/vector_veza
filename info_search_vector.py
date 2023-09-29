@@ -110,6 +110,7 @@ class info():
                             var.append('')
                             sidee = "СПРАВА"
                             heat_exchanger = item.split()[1].split(";")[0]
+                            heat_exchanger = "ВНВ" if "КВН" in heat_exchanger else "ВОВ"
                             temperature = float(findall(r"tжн= {0,1}([\-\.,\d]*) {0,1}°C", item)[0].replace(",", "."))
                             G = float(findall(r"Gж=([\-\.,\d]*) кг/ч", item)[0].replace(",", "."))/1000
                             glycol = 0
