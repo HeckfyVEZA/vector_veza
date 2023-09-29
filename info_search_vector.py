@@ -115,6 +115,8 @@ class info():
                             glycol = 0
                             glykol_type = ''
                             realG = G/search_glic_ro(temperature, glycol/100)
+                            realG = round(realG, 3)
+                            
                             hu = ''
                             all_data.append([('теплообменник', heat_exchanger), ("температура",temperature), ("расход", realG), ("содержание гликоля", glycol), ("заказчик", orderer), ("объект", object_), ("менеджер", manager), ("название", name), ("система", system), ("сторона обслуживания", sidee),  ("теплоутилизатор", hu), ("тип гликоля", glykol_type)])
                 except:
