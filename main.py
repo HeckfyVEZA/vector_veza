@@ -1,15 +1,15 @@
 import streamlit as st
-from modules.info_search_vector import info #Вытаскиваем информацию по вектору
-from modules.info_search_vector import search_glic_ro
-from modules.vector_selection import selection #Формируем полное наименование Вектора
-from modules.auto_valve_scheme import valve, scheme  # для формирования имени
-from modules.blank import blank_auto #Формируем Вектор, который выводится на странице
-from modules.order_form import fulfil_temp # По факту, самое главное - формирует сам бланк
+from info_search_vector import info #Вытаскиваем информацию по вектору
+from info_search_vector import search_glic_ro
+from vector_selection import selection #Формируем полное наименование Вектора
+from auto_valve_scheme import valve, scheme  # для формирования имени
+from blank import blank_auto #Формируем Вектор, который выводится на странице
+from order_form import fulfil_temp # По факту, самое главное - формирует сам бланк
 import io
 from zipfile import ZipFile 
-from modules.vector_verosa import many_bl, table_costs
+from vector_verosa import many_bl, table_costs
 import pandas as pd
-from modules.import_google_table import table_vector
+from import_google_table import table_vector
 from vector_canal import many_bl_kanal
 
 
