@@ -427,7 +427,7 @@ with  main_tab[2]: # Для ручного режима
 
 
     type_scheme =[vector_scheme,vector_valve,type_size]
-    #document = fulfil_temp(cblank,type_scheme,Data_frame_google)
+    document = fulfil_temp(cblank,type_scheme,Data_frame_google)
     key_cost = [f'{vector_scheme}-{vector_valve}-{type_size}']
     bio = io.BytesIO()
     document.save(bio)
