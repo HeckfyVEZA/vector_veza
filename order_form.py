@@ -82,7 +82,7 @@ def fulfil_temp(cblank,type_scheme): # Сама функция вывода вс
     #sheet_id = "1Qn-rGHE-mBaXHzVL9GHgGURV2OK0ZMRxcWerJ98qQhY"
     #Data_frame = pd.read_csv(f'https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=csv') неудачная попытка напрямую обрратиться к google таблице по ссылки
     
-    Data_frame = table_vector()
+    #Data_frame = table_vector()
 
     #type_scheme = f"{type_scheme[0]}-{type_scheme[1]}-{type_scheme[2]}"
     #type_scheme = type_scheme.replace("С","C")
