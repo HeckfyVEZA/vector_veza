@@ -7,7 +7,7 @@ import pandas as pd
 from import_google_table import table_vector
 
 # doc = d('C:\\Users\\kushhov\\Desktop\\vector-main\\template.docx')
-def fulfil_temp(cblank,type_scheme): # Сама функция вывода всего и вся в test.doc
+def fulfil_temp(cblank,type_scheme,Data_frame): # Сама функция вывода всего и вся в test.doc
     doc = d('template.docx')
     #doc = d('./template.docx')
     # Таблица шапки
