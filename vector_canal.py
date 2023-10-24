@@ -1,4 +1,4 @@
-from modules.vector_verosa import search_glic_ro,TIH,TIS
+from vector_verosa import search_glic_ro,TIH,TIS
 from docx import Document
 import pandas as pd
 from re import findall as f_all
